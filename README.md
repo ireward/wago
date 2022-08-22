@@ -4,4 +4,36 @@
 
 ## About
 
-Wago is a shared library that ise used in different Go projects within iReward.
+Wago is a shared library that is used in different Go projects within iReward.
+
+## Prerequisites
+
+In order to use this library, you need to have at least version 1.18 of Go installed on your device. To check if you have go installed, the the following command in your command line:
+
+```bash
+go version
+```
+
+If Go is installed, you should see the version thats installed.
+
+## Installation
+
+To install `wago` and its dependencies, you have to options:
+
+- If using Go modules, just import the packages that you want to use and afterwards run `go mod tidy`.
+
+```bash
+import (
+    "github.com/ireward/wago/log"
+)
+```
+
+- To download the library from GitHub, use the `go get` command
+
+```bash
+go get github.com/ireward/wago
+```
+
+## Usage
+
+TBD.

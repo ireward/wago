@@ -14,6 +14,8 @@ test:
 		-short \
 		-timeout=5m \
 		./...
+		-coverprofile=coverage.out
+
 
 .PHONY: test-coverage
 test-coverage:

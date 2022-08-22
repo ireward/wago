@@ -13,7 +13,7 @@ test:
 		-count=1 \
 		-short \
 		-timeout=5m \
-		./...
+		./... \
 		-coverprofile=coverage.out
 
 

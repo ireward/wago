@@ -117,6 +117,6 @@ type Callback[T any] func(arg T)
 type ErrorCallback[T any] func(arg T, err error)
 
 // EmptyNext is an implementation of Next that does nothing.
-func EmptyNext[T any](arg T, next Next[T]) error {
+func EmptyNext[T any](arg T) error {
 	return nil
 }

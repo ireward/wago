@@ -1,6 +1,4 @@
-<h2 align="center"> A utility library for Go projects within iReward </h2>
-
----
+# A utility library for Go projects within iReward
 
 ## About
 

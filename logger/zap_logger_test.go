@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"bytes"
@@ -9,13 +9,13 @@ import (
 	"strconv"
 	"strings"
 	"testing"
-	"wago/log/tag"
+	"wago/logger/tag"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 )
 
-func TestParseZapLevel(t *testing.T) {
+func Test_ParseZapLevel(t *testing.T) {
 	assert.Equal(t, zap.DebugLevel, parseZapLevel("debug"))
 	assert.Equal(t, zap.InfoLevel, parseZapLevel("info"))
 	assert.Equal(t, zap.WarnLevel, parseZapLevel("warn"))
@@ -24,7 +24,7 @@ func TestParseZapLevel(t *testing.T) {
 	assert.Equal(t, zap.InfoLevel, parseZapLevel("unknown"))
 }
 
-func TestDefaultZapLogger(t *testing.T) {
+func Test_DefaultZapLogger(t *testing.T) {
 	old := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
@@ -51,7 +51,7 @@ func TestDefaultZapLogger(t *testing.T) {
 	assert.Equal(t, `{"level":"info","msg":"test info","error":"test error","test":"field","logging-call-at":"zap_logger_test.go:`+lineNum+`"}`+"\n", out)
 }
 
-func TestCtxZapLogger(t *testing.T) {
+func Test_CtxZapLogger(t *testing.T) {
 	ctx := context.Background()
 	logger := NewZapLogger(zap.NewExample())
 	logger1 := FromCtx(ctx)

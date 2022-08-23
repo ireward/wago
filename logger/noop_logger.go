@@ -1,6 +1,6 @@
-package log
+package logger
 
-import "wago/log/tag"
+import "wago/logger/tag"
 
 type (
 	noopLogger struct{}

@@ -1,11 +1,11 @@
-package log
+package logger
 
 import (
 	"fmt"
 	"os"
 	"strings"
 
-	"wago/log/tag"
+	"wago/logger/tag"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -18,12 +18,6 @@ type zapLogger struct {
 
 var _ Logger = (*zapLogger)(nil)
 
-// NewLoggerFromConf builds and returns a new zap based logger
-// from zap.Logger for this logging configuration.
-func NewLoggerFromConf(conf Config) *zapLogger {
-	return NewZapLogger(BuildZapLogger(conf))
-}
-
 // NewDefaultLogger returns a logger at debug level and log
 // into StdErr.
 func NewDefaultLogger() *zapLogger {
@@ -32,9 +26,15 @@ func NewDefaultLogger() *zapLogger {
 	}))
 }
 
+// NewLoggerFromConf builds and returns a new zap based logger
+// from zap.Logger for this logging configuration.
+func NewZapLoggerFromConf(conf Config) *zapLogger {
+	return NewZapLogger(BuildZapLogger(conf))
+}
+
 // NewCLI Logger builds and returns a new zap based logger from
 // zap.Logger used for cli-logging.
-func NewCLILogger() *zapLogger {
+func NewCLIZapLogger() *zapLogger {
 	return NewZapLogger(buildCLIZapLogger())
 }
 

@@ -1,7 +1,7 @@
-package log
+package logger
 
 import (
-	"wago/log/tag"
+	"wago/logger/tag"
 )
 
 // Logger is the logging interface.

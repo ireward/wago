@@ -11,6 +11,7 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 )
 
+// provide some defaults which are used across all the API
 var (
 	info = openapi3.Info{
 		Version:     "1.0.0",
@@ -30,6 +31,7 @@ var (
 			},
 		},
 	}
+	xAppIDParam = openapi.NewInHeaderParam("X-App-ID", "X-App-ID", "The application ID used to assign a request to.")
 )
 
 var _ openapi.Enum = (*TestEnum)(nil)
@@ -85,15 +87,7 @@ func (t *TestAPI) GetPaths() []*openapi.Path {
 			Operations: []*openapi.Operation{
 				openapi.NewOperation(http.MethodPost, nil, tags[rand.Intn(len(tags))], "TestPost",
 					openapi.NewRequestBody(openapi.SchemeType_Object, TestRequest{}),
-					[]*openapi.Parameter{
-						{
-							ID:          "Param1",
-							Name:        "param1",
-							SchemeType:  openapi.SchemeType_String,
-							In:          openapi.ParameterLocation_InHeader,
-							Description: "param1 description",
-						},
-					},
+					[]*openapi.Parameter{xAppIDParam},
 					&openapi.WithBearerAuth,
 					openapi.NewResponse(http.StatusOK, openapi.SchemeType_Object, TestResponse{}, nil,
 						&openapi.ResponseMeta{

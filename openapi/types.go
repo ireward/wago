@@ -57,6 +57,38 @@ type Parameter struct {
 	Required    bool
 }
 
+// NewInHeaderParam instantiates a new Parameter
+// with default parameters:
+// - in: header
+// - schemeType: string
+// - required: true
+func NewInHeaderParam(id, name, descr string) *Parameter {
+	return &Parameter{
+		ID:          id,
+		Name:        name,
+		Description: descr,
+		In:          ParameterLocation_InHeader,
+		SchemeType:  SchemeType_String,
+		Required:    true,
+	}
+}
+
+// NewInPathParam instantiates a new Parameter
+// with default parameters:
+// - in: path
+// - schemeType: string
+// - required: true
+func NewInPathParam(id, name, descr string) *Parameter {
+	return &Parameter{
+		ID:          id,
+		Name:        name,
+		Description: descr,
+		In:          ParameterLocation_InPath,
+		SchemeType:  SchemeType_String,
+		Required:    true,
+	}
+}
+
 // SecurityType is a custom type to represent the security scheme of an OpenAPI-document.
 type SecurityType string
 

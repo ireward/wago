@@ -61,7 +61,8 @@ type builder struct {
 	generator *openapi3gen.Generator
 
 	// cache used to store the generated schemas for enums
-	enumCache map[string]bool
+	enumCache  map[string]bool
+	modelCache map[string]reflect.Type
 }
 
 type BuilderConfig struct {
@@ -90,8 +91,9 @@ func NewBuilder(ctx context.Context, v string, conf *BuilderConfig) *builder {
 				OpenAPI: v,
 			},
 		},
-		conf:      conf,
-		enumCache: make(map[string]bool),
+		conf:       conf,
+		enumCache:  make(map[string]bool),
+		modelCache: make(map[string]reflect.Type),
 	}
 
 	// confgigure the openapi generator
@@ -132,6 +134,7 @@ func (b *builder) Build() error {
 		return err
 	}
 	b.resolveRefPaths()
+	b.markPropsAsRequired()
 	return nil
 }
 
@@ -194,6 +197,29 @@ func (b *builder) newOpenApiOperation(in *Operation) (*openapi3.Operation, error
 		Responses:   resp,
 		Security:    security,
 	}, nil
+}
+
+func (b *builder) markPropsAsRequired() {
+	for k := range b.Spec.Model.Components.Schemas {
+		requiredProps := make([]string, 0)
+		if t := b.modelCache[k]; t != nil {
+			for i := 0; i < t.NumField(); i++ {
+				f := t.Field(i)
+				// we make a property as required if the json tag does not contain
+				// the "omitempty" option
+				tag := f.Tag.Get("json")
+				if strings.Contains(tag, "omitempty") {
+					continue
+				} else {
+					split := strings.Split(tag, ",")
+					if len(split) > 0 {
+						requiredProps = append(requiredProps, split[0])
+					}
+				}
+			}
+		}
+		b.Spec.Model.Components.Schemas[k].Value.Required = requiredProps
+	}
 }
 
 func (b *builder) resolveRefPaths() {
@@ -419,12 +445,29 @@ func (b *builder) buildReqBody(r *RequestBody) (*openapi3.RequestBodyRef, error)
 	return b.Spec.Model.Components.RequestBodies[r.Model.Name()], nil
 }
 
+func (b *builder) addToModelCache(model reflect.Type) {
+	if _, ok := b.modelCache[model.Name()]; !ok {
+		b.modelCache[model.Name()] = model
+		for i := 0; i < model.NumField(); i++ {
+			field := model.Field(i)
+			if field.Anonymous || field.Type.Kind() == reflect.Struct {
+				b.addToModelCache(field.Type)
+			}
+		}
+	}
+}
+
 func (b *builder) buildSchema(model reflect.Type) (*openapi3.SchemaRef, error) {
 	var err error
 	var ref *openapi3.SchemaRef
 
 	ref, ok := b.Spec.Model.Components.Schemas[model.Name()]
 	if !ok {
+		// GenerateSchemaRef generates SchemaRefs recursively
+		// Assuming this, all embedded models are created in Components.Schemas
+		// However, they are not in the modelCache. This leads to problems afterwards,
+		// when trying to resolve required properties.
+		b.addToModelCache(model)
 		ref, err = b.generator.GenerateSchemaRef(model)
 		if err != nil {
 			return nil, err
@@ -473,4 +516,47 @@ func formatSchemaRefPath(ref *openapi3.SchemaRef, name string) string {
 
 func formatParameterRefPath(param *Parameter) string {
 	return fmt.Sprintf("%s/%s", parametersPath, param.ID)
+}
+
+// Enum is an interface which must be implemented by types
+// that represent an enum in an OpenApi-Document.
+type Enum interface {
+	OpenApiValues() []interface{}
+}
+
+func (b *builder) customizer(name string, t reflect.Type, tag reflect.StructTag, schema *openapi3.Schema) error {
+	// Enumeration Customizer
+	if t.Implements(reflect.TypeOf((*Enum)(nil)).Elem()) {
+		schema.Type = "string"
+
+		m, _ := t.MethodByName("OpenApiValues")
+		in := make([]reflect.Value, m.Type.NumIn())
+		for i := 0; i < m.Type.NumIn(); i++ {
+			in[i] = reflect.Zero(m.Type.In(i))
+		}
+		res := m.Func.Call(in)
+		schema.Enum = res[0].Interface().([]interface{})
+
+		if has := b.enumCache[t.Name()]; !has {
+			b.enumCache[t.Name()] = true
+		}
+	}
+
+	// Description Customizer
+	if descr := tag.Get("descr"); descr != "" {
+		schema.Description = descr
+	}
+
+	return nil
+}
+
+func chainCustomizer(customizers ...openapi3gen.SchemaCustomizerFn) openapi3gen.SchemaCustomizerFn {
+	return func(name string, t reflect.Type, tag reflect.StructTag, schema *openapi3.Schema) error {
+		for _, c := range customizers {
+			if err := c(name, t, tag, schema); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
 }

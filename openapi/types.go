@@ -3,9 +3,6 @@ package openapi
 import (
 	"fmt"
 	"reflect"
-
-	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/getkin/kin-openapi/openapi3gen"
 )
 
 type ContentType string
@@ -207,41 +204,4 @@ func (p *Path) isValid() error {
 // Impl represents an implementation of a REST-API.
 type Impl interface {
 	GetPaths() []*Path
-}
-
-// Enum is an interface which must be implemented by types
-// that represent an enum in an OpenApi-Document.
-type Enum interface {
-	OpenApiValues() []interface{}
-}
-
-func (b *builder) customizer(name string, t reflect.Type, tag reflect.StructTag, schema *openapi3.Schema) error {
-	// Enumeration Customizer
-	if t.Implements(reflect.TypeOf((*Enum)(nil)).Elem()) {
-		schema.Type = "string"
-
-		m, _ := t.MethodByName("OpenApiValues")
-		in := make([]reflect.Value, m.Type.NumIn())
-		for i := 0; i < m.Type.NumIn(); i++ {
-			in[i] = reflect.Zero(m.Type.In(i))
-		}
-		res := m.Func.Call(in)
-		schema.Enum = res[0].Interface().([]interface{})
-
-		if has := b.enumCache[t.Name()]; !has {
-			b.enumCache[t.Name()] = true
-		}
-	}
-	return nil
-}
-
-func chainCustomizer(customizers ...openapi3gen.SchemaCustomizerFn) openapi3gen.SchemaCustomizerFn {
-	return func(name string, t reflect.Type, tag reflect.StructTag, schema *openapi3.Schema) error {
-		for _, c := range customizers {
-			if err := c(name, t, tag, schema); err != nil {
-				return err
-			}
-		}
-		return nil
-	}
 }

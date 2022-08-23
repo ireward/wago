@@ -51,13 +51,18 @@ func (e TestEnum) OpenApiValues() []interface{} {
 }
 
 type TestRequest struct {
-	ReqProp1 string `json:"req_prop1"`
-	ReqProp2 string `json:"req_prop2"`
+	ReqProp1 string `json:"req_prop1" descr:"ReqProp1 must be set since the backend useses it to infer some important business logic."`
+	ReqProp2 string `json:"req_prop2,omitempty"`
+}
+
+type EmbeddedEmbeddedModel struct {
+	DeepProp1 string `json:"deep_prop1,omitempty"`
 }
 
 type EmbeddedModel struct {
-	EmbeddedProp1 int    `json:"embedded_prop1"`
-	EmbeddedProp2 string `json:"embedded_prop2"`
+	EmbeddedProp1 int                   `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
+	EmbeddedProp2 string                `json:"embedded_prop2"`
+	EmbeddedProp3 EmbeddedEmbeddedModel `json:"embedded_prop3"`
 }
 
 type TestResponse struct {

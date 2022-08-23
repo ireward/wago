@@ -2,15 +2,28 @@
   "openapi": "3.0.3",
   "components": {
     "schemas": {
+      "EmbeddedEmbeddedModel": {
+        "properties": {
+          "deep_prop1": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "EmbeddedModel": {
         "properties": {
           "embedded_prop1": {
+            "description": "this is a description of embedded property 1. This is a very important property.",
             "type": "integer"
           },
           "embedded_prop2": {
             "type": "string"
+          },
+          "embedded_prop3": {
+            "$ref": "#/components/schemas/EmbeddedEmbeddedModel"
           }
         },
+        "required": ["embedded_prop1", "embedded_prop2", "embedded_prop3"],
         "type": "object"
       },
       "TestEnum": {
@@ -20,12 +33,14 @@
       "TestRequest": {
         "properties": {
           "req_prop1": {
+            "description": "ReqProp1 must be set since the backend useses it to infer some important business logic.",
             "type": "string"
           },
           "req_prop2": {
             "type": "string"
           }
         },
+        "required": ["req_prop1"],
         "type": "object"
       },
       "TestResponse": {
@@ -44,6 +59,7 @@
             "$ref": "#/components/schemas/TestEnum"
           }
         },
+        "required": ["resp_prop1", "resp_prop2", "resp_prop3", "test_enum"],
         "type": "object"
       }
     },

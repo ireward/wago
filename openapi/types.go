@@ -138,6 +138,16 @@ func NewRequestBody(s SchemeType, model interface{}) *RequestBody {
 	}
 }
 
+// NewObjectRequestBody instantiates a new RequestBody with a SchemeType object.
+func NewObjectRequestBody(model interface{}) *RequestBody {
+	return NewRequestBody(SchemeType_Object, model)
+}
+
+// NewArrayRequestBody instantiates a new RequestBody with a SchemeType array.
+func NewArrayRequestBody(model interface{}) *RequestBody {
+	return NewRequestBody(SchemeType_Array, model)
+}
+
 // Content is an object to represent the content of an OpenApi-document.
 type Content struct {
 	SchemaType SchemeType
@@ -175,6 +185,16 @@ func NewResponse(statusCode int, schemaType SchemeType, model interface{}, heade
 		}
 	}
 	return c
+}
+
+// NewObjectResponse instantiates a new Response with a SchemeType object.
+func NewObjectResponse(statusCode int, model interface{}, headers []*ResponseHeader, meta *ResponseMeta) *Response {
+	return NewResponse(statusCode, SchemeType_Object, model, headers, meta)
+}
+
+// NewArrayResponse instantiates a new Response with a SchemeType array.
+func NewArrayResponse(statusCode int, model interface{}, headers []*ResponseHeader, meta *ResponseMeta) *Response {
+	return NewResponse(statusCode, SchemeType_Array, model, headers, meta)
 }
 
 // Operation represents an OpenAPI operation.

@@ -31,9 +31,12 @@ var (
 			},
 		},
 	}
-	xAppIDParam = openapi.NewInHeaderParam("X-App-ID", "X-App-ID", "The application ID used to assign a request to.")
+	xAppIDParam = openapi.NewInHeaderParam("AppIDParam", "X-App-ID", "The application ID used to assign a request to.")
 )
 
+// Region API-Models  ///////////////////////////////////////////////////////////
+
+// models are usually defined in another file or are imported into the generator code
 var _ openapi.Enum = (*TestEnum)(nil)
 
 type TestEnum int
@@ -76,6 +79,8 @@ type TestResponse struct {
 
 type TestAPI struct{}
 
+// End Region  ///////////////////////////////////////////////////////
+
 func (t *TestAPI) GetPaths() []*openapi.Path {
 	tag1 := []string{"tag1"}
 	tag2 := []string{"tag2"}
@@ -85,14 +90,63 @@ func (t *TestAPI) GetPaths() []*openapi.Path {
 		{
 			Template: "/api/v1/test",
 			Operations: []*openapi.Operation{
-				openapi.NewOperation(http.MethodPost, nil, tags[rand.Intn(len(tags))], "TestPost",
-					openapi.NewRequestBody(openapi.SchemeType_Object, TestRequest{}),
+				openapi.NewOperation(
+					// method of the operation
+					http.MethodPost,
+					// handler of the operation (currently just a dummy to indicate to the implementer, which handler is used)
+					nil,
+					// tags where the operation is grouped in
+					tags[rand.Intn(len(tags))],
+					// operationID
+					"TestPost",
+					// requestBody
+					openapi.NewObjectRequestBody(TestRequest{}),
+					// required parameters: either in path, cookie or header
 					[]*openapi.Parameter{xAppIDParam},
+					// security requirements: eiter basic_auth, api_key or bearer
 					&openapi.WithBearerAuth,
-					openapi.NewResponse(http.StatusOK, openapi.SchemeType_Object, TestResponse{}, nil,
+					// response returned by the API
+					openapi.NewObjectResponse(
+						// status code
+						http.StatusOK,
+						// response body
+						TestResponse{},
+						// exposed headers (optional)
+						nil,
+						// description of the response
 						&openapi.ResponseMeta{
 							Name:        "TestPostResponse",
 							Description: "Returns the object after POSTing it to the server.",
+						}),
+				),
+			},
+		},
+		{
+			Template: "/api/v1/test/{id}",
+			Operations: []*openapi.Operation{
+				openapi.NewOperation(
+					// method of the operation
+					http.MethodGet,
+					// handler of the operation (currently just a dummy to indicate to the implementer, which handler is used)
+					nil,
+					// tags where the operation is grouped in
+					tags[rand.Intn(len(tags))],
+					// operationID
+					"TestGetById",
+					// requestBody
+					nil,
+					// required parameters: either in path, cookie or header
+					[]*openapi.Parameter{xAppIDParam, openapi.NewInPathParam("TestID", "id", "ID of the object to get.")},
+					// security requirements: eiter basic_auth, api_key or bearer
+					&openapi.WithBearerAuth,
+					// response returned by the API
+					openapi.NewObjectResponse(
+						http.StatusOK,
+						TestResponse{},
+						nil,
+						&openapi.ResponseMeta{
+							Name:        "TestGetByIdResponse",
+							Description: "Returns the object with the given ID.",
 						}),
 				),
 			},

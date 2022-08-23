@@ -64,10 +64,20 @@
       }
     },
     "parameters": {
-      "Param1": {
-        "description": "param1 description",
+      "AppIDParam": {
+        "description": "The application ID used to assign a request to.",
         "in": "header",
-        "name": "param1",
+        "name": "X-App-ID",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "TestID": {
+        "description": "ID of the object to get.",
+        "in": "path",
+        "name": "id",
+        "required": true,
         "schema": {
           "type": "string"
         }
@@ -86,6 +96,16 @@
       }
     },
     "responses": {
+      "TestGetByIdResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TestResponse"
+            }
+          }
+        },
+        "description": "Returns the object with the given ID."
+      },
       "TestPostResponse": {
         "content": {
           "application/json": {
@@ -122,7 +142,7 @@
         "operationId": "TestPost",
         "parameters": [
           {
-            "$ref": "#/components/parameters/Param1"
+            "$ref": "#/components/parameters/AppIDParam"
           }
         ],
         "requestBody": {
@@ -138,6 +158,30 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/TestPostResponse"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": ["tag2"]
+      }
+    },
+    "/api/v1/test/{id}": {
+      "get": {
+        "operationId": "TestGetById",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppIDParam"
+          },
+          {
+            "$ref": "#/components/parameters/TestID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TestGetByIdResponse"
           }
         },
         "security": [

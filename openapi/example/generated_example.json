@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.3",
+  "components": {
+    "schemas": {
+      "EmbeddedModel": {
+        "properties": {
+          "embedded_prop1": {
+            "type": "integer"
+          },
+          "embedded_prop2": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TestEnum": {
+        "enum": ["ValueOne", "ValueTwo", "ValueThree"],
+        "type": "string"
+      },
+      "TestRequest": {
+        "properties": {
+          "req_prop1": {
+            "type": "string"
+          },
+          "req_prop2": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TestResponse": {
+        "properties": {
+          "resp_prop1": {
+            "type": "string"
+          },
+          "resp_prop2": {
+            "format": "double",
+            "type": "number"
+          },
+          "resp_prop3": {
+            "$ref": "#/components/schemas/EmbeddedModel"
+          },
+          "test_enum": {
+            "$ref": "#/components/schemas/TestEnum"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "parameters": {
+      "Param1": {
+        "description": "param1 description",
+        "in": "header",
+        "name": "param1",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "requestBodies": {
+      "TestRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TestRequest"
+            }
+          }
+        },
+        "required": true
+      }
+    },
+    "responses": {
+      "TestPostResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TestResponse"
+            }
+          }
+        },
+        "description": "Returns the object after POSTing it to the server."
+      },
+      "default": {
+        "description": ""
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "email": "john@doe.com"
+    },
+    "description": "This is a test API.\n",
+    "title": "Test API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/test": {
+      "post": {
+        "operationId": "TestPost",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Param1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TestPostResponse"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": ["tag2"]
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Test server",
+      "url": "{schema}://{address}",
+      "variables": {
+        "address": {
+          "default": "acme.com"
+        },
+        "schema": {
+          "default": "https",
+          "enum": ["http", "https"]
+        }
+      }
+    }
+  ]
+}

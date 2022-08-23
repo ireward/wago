@@ -1,8 +1,6 @@
-# A utility library for Go projects within iReward
+# Wago
 
-## About
-
-Wago is a shared library that is used in different Go projects within iReward.
+A shared library that is used in different Go projects within iReward Health.
 
 ## Prerequisites
 

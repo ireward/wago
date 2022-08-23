@@ -58,7 +58,8 @@ func TestSchemaRefs(t *testing.T) {
 				},
 			},
 		},
-		enumCache: make(map[string]bool),
+		enumCache:  make(map[string]bool),
+		modelCache: make(map[string]reflect.Type),
 	}
 	b.generator = openapi3gen.NewGenerator(openapi3gen.UseAllExportedFields(), openapi3gen.SchemaCustomizer(b.customizer))
 

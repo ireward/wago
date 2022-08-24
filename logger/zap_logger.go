@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"wago/logger/tag"
+	"github.com/ireward/wago/logger/tag"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

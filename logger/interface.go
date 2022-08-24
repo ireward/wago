@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"wago/logger/tag"
+	"github.com/ireward/wago/logger/tag"
 )
 
 // Logger is the logging interface.

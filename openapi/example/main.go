@@ -6,7 +6,8 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"wago/openapi"
+
+	"github.com/ireward/wago/openapi"
 
 	"github.com/getkin/kin-openapi/openapi3"
 )

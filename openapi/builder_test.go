@@ -9,7 +9,8 @@ import (
 	"path"
 	"reflect"
 	"testing"
-	"wago/logger"
+
+	"github.com/ireward/wago/logger"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3gen"

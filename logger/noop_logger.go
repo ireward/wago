@@ -1,6 +1,6 @@
 package logger
 
-import "wago/logger/tag"
+import "github.com/ireward/wago/logger/tag"
 
 type (
 	noopLogger struct{}

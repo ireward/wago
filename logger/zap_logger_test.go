@@ -9,7 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"testing"
-	"wago/logger/tag"
+
+	"github.com/ireward/wago/logger/tag"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"

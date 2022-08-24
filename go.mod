@@ -1,4 +1,4 @@
-module wago
+module github.com/ireward/wago
 
 go 1.18
 

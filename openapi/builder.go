@@ -8,8 +8,9 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	log "wago/logger"
-	"wago/logger/tag"
+
+	log "github.com/ireward/wago/logger"
+	"github.com/ireward/wago/logger/tag"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3gen"

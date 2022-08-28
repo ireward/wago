@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"fmt"
+	"net/http"
 	"reflect"
 )
 
@@ -195,6 +196,24 @@ func NewObjectResponse(statusCode int, model interface{}, headers []*ResponseHea
 // NewArrayResponse instantiates a new Response with a SchemeType array.
 func NewArrayResponse(statusCode int, model interface{}, headers []*ResponseHeader, meta *ResponseMeta) *Response {
 	return NewResponse(statusCode, SchemeType_Array, model, headers, meta)
+}
+
+// NewUnauthiorizedResponse instantiates a new Response with a SchemeType object
+// and a status code of 401.
+func NewUnauthorizedResponse(model interface{}) *Response {
+	return NewObjectResponse(http.StatusUnauthorized, model, nil, &ResponseMeta{
+		Name:        "UnauthorizedError",
+		Description: "The provided credentials are either not valid or do not have the required permissions to access the requested resource.",
+	})
+}
+
+// NewNotFoundResponse instantiates a new Response with a SchemeType object
+// and a status code of 404.
+func NewNotFoundResponse(model interface{}) *Response {
+	return NewObjectResponse(http.StatusNotFound, model, nil, &ResponseMeta{
+		Name:        "NotFoundError",
+		Description: "The requested resource was not found.",
+	})
 }
 
 // Operation represents an OpenAPI operation.

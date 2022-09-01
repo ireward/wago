@@ -3,6 +3,7 @@ package redoc
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"text/template"
 
 	_ "embed"
@@ -13,6 +14,7 @@ var ErrSpecNotFound = errors.New("spec not found")
 
 // Type configuration
 type Type struct {
+	Prefix      string
 	SpecPath    string
 	DocPath     string
 	Title       string
@@ -39,10 +41,18 @@ func (r *Type) Body() ([]byte, error) {
 	if JavaScript == "" || HTML == "" {
 		return nil, errors.New("redoc assets not found")
 	}
+
+	var url string
+	if r.Prefix != "" {
+		url = fmt.Sprintf("%s/%s", r.Prefix, r.SpecPath)
+	} else {
+		url = r.SpecPath
+	}
+
 	if err = tpl.Execute(buf, map[string]string{
 		"body":        JavaScript,
 		"title":       r.Title,
-		"url":         r.SpecPath,
+		"url":         url,
 		"description": r.Description,
 	}); err != nil {
 		return nil, err

@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/getkin/kin-openapi v0.98.0
+	github.com/gorilla/mux v1.8.0
 	github.com/stretchr/testify v1.8.0
 	go.uber.org/zap v1.22.0
 )

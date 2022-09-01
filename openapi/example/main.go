@@ -111,7 +111,7 @@ func (t *TestAPI) GetPaths() []*openapi.Path {
 						// status code
 						http.StatusOK,
 						// response body
-						TestResponse{},
+						nil,
 						// exposed headers (optional)
 						nil,
 						// description of the response

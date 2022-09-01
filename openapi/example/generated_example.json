@@ -107,13 +107,6 @@
         "description": "Returns the object with the given ID."
       },
       "TestPostResponse": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/TestResponse"
-            }
-          }
-        },
         "description": "Returns the object after POSTing it to the server."
       },
       "default": {

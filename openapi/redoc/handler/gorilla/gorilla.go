@@ -27,14 +27,26 @@ func (h *Handler) Register(ctx context.Context, router *mux.Router, redoc *redoc
 	}
 
 	// Register the spec-handler
-	router.HandleFunc(redoc.SpecPath, func(w http.ResponseWriter, r *http.Request) {
+	var specPath string
+	if redoc.Prefix != "" {
+		specPath = redoc.Prefix + "/" + redoc.SpecPath
+	} else {
+		specPath = redoc.SpecPath
+	}
+	router.HandleFunc(specPath, func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(spec)
 	}).Methods("GET")
 
 	// Register the redoc-handler
-	router.HandleFunc(redoc.DocPath, func(w http.ResponseWriter, r *http.Request) {
+	var docPath string
+	if redoc.Prefix != "" {
+		docPath = redoc.Prefix + "/" + redoc.DocPath
+	} else {
+		docPath = redoc.DocPath
+	}
+	router.HandleFunc(docPath, func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "text/html")
 		w.Write(body)

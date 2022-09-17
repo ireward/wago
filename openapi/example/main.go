@@ -62,13 +62,13 @@ type TestRequest struct {
 }
 
 type EmbeddedEmbeddedModel struct {
-	DeepProp1 string `json:"deep_prop1,omitempty"`
+	DeepProp1 string `json:"deep_prop1"`
 }
 
 type EmbeddedModel struct {
-	EmbeddedProp1 int                   `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
-	EmbeddedProp2 string                `json:"embedded_prop2"`
-	EmbeddedProp3 EmbeddedEmbeddedModel `json:"embedded_prop3"`
+	EmbeddedEmbeddedModel
+	EmbeddedProp1 int    `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
+	EmbeddedProp2 string `json:"embedded_prop2"`
 }
 
 type TestResponse struct {

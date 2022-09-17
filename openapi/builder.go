@@ -204,27 +204,44 @@ func (b *builder) newOpenApiOperation(in *Operation) (*openapi3.Operation, error
 	return o, nil
 }
 
+// markPropsAsRequired marks the properties of a schema as required if they
+// contain the json tag contains `omitempty`.
 func (b *builder) markPropsAsRequired() {
 	for k := range b.Spec.Model.Components.Schemas {
 		requiredProps := make([]string, 0)
 		if t := b.modelCache[k]; t != nil {
-			for i := 0; i < t.NumField(); i++ {
-				f := t.Field(i)
-				// we make a property as required if the json tag does not contain
-				// the "omitempty" option
-				tag := f.Tag.Get("json")
-				if strings.Contains(tag, "omitempty") {
-					continue
-				} else {
-					split := strings.Split(tag, ",")
-					if len(split) > 0 {
-						requiredProps = append(requiredProps, split[0])
-					}
-				}
-			}
+			requiredProps = append(requiredProps, b.extractRequiredProps(t)...)
 		}
 		b.Spec.Model.Components.Schemas[k].Value.Required = requiredProps
 	}
+}
+
+func (b *builder) extractRequiredProps(t reflect.Type) []string {
+	requiredProps := make([]string, 0)
+	for i := 0; i < t.NumField(); i++ {
+		f := t.Field(i)
+		if f.Anonymous {
+			// if the field is anonymous, we need to extract the required properties
+			// from the embedded struct which should also be in the model cache
+			if e, ok := b.modelCache[f.Type.Name()]; ok {
+				requiredProps = append(requiredProps, b.extractRequiredProps(e)...)
+			}
+		} else {
+			// we make a property as required if the json tag does not contain
+			// the "omitempty" option
+			if isRequiredProp(f.Tag.Get("json")) {
+				split := strings.Split(f.Tag.Get("json"), ",")
+				if len(split) > 0 {
+					requiredProps = append(requiredProps, split[0])
+				}
+			}
+		}
+	}
+	return requiredProps
+}
+
+func isRequiredProp(tag string) bool {
+	return !strings.Contains(tag, "omitempty")
 }
 
 func (b *builder) resolveRefPaths() {
@@ -260,7 +277,6 @@ func (b *builder) resolveRefPaths() {
 
 func (b *builder) buildParams(params []*Parameter) openapi3.Parameters {
 	parameters := openapi3.Parameters{}
-
 	for _, param := range params {
 		if ex, ok := b.Spec.Model.Components.Parameters[param.ID]; ok {
 			parameters = append(parameters, &openapi3.ParameterRef{
@@ -279,16 +295,13 @@ func (b *builder) buildParams(params []*Parameter) openapi3.Parameters {
 					Required: param.Required,
 				},
 			}
-
 			b.Spec.Model.Components.Parameters[param.ID] = parameterRef
-
 			parameters = append(parameters, &openapi3.ParameterRef{
 				Ref:   formatParameterRefPath(param),
 				Value: parameterRef.Value,
 			})
 		}
 	}
-
 	return parameters
 }
 

@@ -188,16 +188,20 @@ func (b *builder) newOpenApiOperation(in *Operation) (*openapi3.Operation, error
 	params := b.buildParams(in.Parameters)
 	security := b.buildSecReq(in.SecurityParam)
 
-	return &openapi3.Operation{
+	o := &openapi3.Operation{
 		Tags:        in.Tags,
-		Summary:     in.Summary,
-		Description: in.Description,
 		OperationID: in.OperationID,
 		Parameters:  params,
 		RequestBody: reqBody,
 		Responses:   resp,
 		Security:    security,
-	}, nil
+	}
+
+	if in.Meta != nil {
+		o.Summary = in.Meta.Summary
+		o.Description = in.Meta.Description
+	}
+	return o, nil
 }
 
 func (b *builder) markPropsAsRequired() {

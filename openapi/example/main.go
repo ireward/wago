@@ -106,6 +106,11 @@ func (t *TestAPI) GetPaths() []*openapi.Path {
 					[]*openapi.Parameter{xAppIDParam},
 					// security requirements: eiter basic_auth, api_key or bearer
 					&openapi.WithBearerAuth,
+					// meta
+					&openapi.OperationMeta{
+						Summary:     "TestPost",
+						Description: "This is a test operation.",
+					},
 					// response returned by the API
 					openapi.NewObjectResponse(
 						// status code
@@ -140,6 +145,11 @@ func (t *TestAPI) GetPaths() []*openapi.Path {
 					[]*openapi.Parameter{xAppIDParam, openapi.NewInPathParam("TestID", "id", "ID of the object to get.")},
 					// security requirements: eiter basic_auth, api_key or bearer
 					&openapi.WithBearerAuth,
+					// meta
+					&openapi.OperationMeta{
+						Summary:     "TestGetById",
+						Description: "This is a test operation.",
+					},
 					// response returned by the API
 					openapi.NewObjectResponse(
 						http.StatusOK,

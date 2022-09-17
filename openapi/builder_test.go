@@ -163,6 +163,10 @@ func (t *TestAPI) GetPaths() []*Path {
 						},
 					},
 					t.withJWTAuth(),
+					&OperationMeta{
+						Summary:     "Performs a test post",
+						Description: "This is a test post operation.\n",
+					},
 					NewResponse(http.StatusOK, SchemeType_Object, TestResponse{}, nil,
 						&ResponseMeta{
 							Name:        "TestPostResponse",

@@ -216,6 +216,11 @@ func NewNotFoundResponse(model interface{}) *Response {
 	})
 }
 
+type OperationMeta struct {
+	Summary     string
+	Description string
+}
+
 // Operation represents an OpenAPI operation.
 type Operation struct {
 	// Method is the HTTP method the operation supports.
@@ -227,10 +232,6 @@ type Operation struct {
 	Tags []string
 	// OperationID is a unique string used to identify this operation.
 	OperationID string
-	// Summary is a summary of the operation.
-	Summary string
-	// Description is a verbose description of the operation.
-	Description string
 	// RequestBody defines the struct the handler expects in the request body.
 	RequestBody *RequestBody
 	// Params is a list of parameters this operation can take / expects.
@@ -239,10 +240,12 @@ type Operation struct {
 	SecurityParam *SecurityParam
 	// Responses is a variadic argument that represent the responses this operation can return.
 	Responses []*Response
+	// Meta is a struct that contains meta information about the operation.
+	Meta *OperationMeta
 }
 
 // NewOperation instantiates a new Operation struct.
-func NewOperation(method string, handler interface{}, tags []string, operationID string, reqBody *RequestBody, params []*Parameter, sec *SecurityParam, responses ...*Response) *Operation {
+func NewOperation(method string, handler interface{}, tags []string, operationID string, reqBody *RequestBody, params []*Parameter, sec *SecurityParam, meta *OperationMeta, responses ...*Response) *Operation {
 	r := make([]*Response, 0)
 	r = append(r, responses...)
 	return &Operation{
@@ -254,6 +257,7 @@ func NewOperation(method string, handler interface{}, tags []string, operationID
 		Parameters:    params,
 		Responses:     r,
 		SecurityParam: sec,
+		Meta:          meta,
 	}
 }
 

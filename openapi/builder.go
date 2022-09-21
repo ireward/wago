@@ -474,7 +474,7 @@ func (b *builder) addToModelCache(model reflect.Type) {
 
 			if field.Type.Kind() == reflect.Slice {
 				t := field.Type.Elem()
-				if !isPrimitiveTypeOrEmpty(strings.ReplaceAll("*", t.String(), "")) {
+				if !isPrimitiveTypeOrEmpty(strings.ReplaceAll(t.String(), "*", "")) {
 					b.addToModelCache(t)
 				}
 			}

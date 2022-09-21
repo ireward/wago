@@ -43,9 +43,14 @@
      },
      "slice_prop2": {
       "items": {
-       "type": "string"
+       "format": "int32",
+       "type": "integer"
       },
       "type": "array"
+     },
+     "slice_prop3": {
+      "format": "double",
+      "type": "number"
      }
     },
     "required": [

@@ -40,8 +40,17 @@
     "properties": {
      "slice_prop1": {
       "type": "string"
+     },
+     "slice_prop2": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
      }
     },
+    "required": [
+     "slice_prop1"
+    ],
     "type": "object"
    },
    "TestEnum": {

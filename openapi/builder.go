@@ -473,7 +473,10 @@ func (b *builder) addToModelCache(model reflect.Type) {
 			}
 
 			if field.Type.Kind() == reflect.Slice {
-				b.addToModelCache(field.Type.Elem())
+				t := field.Type.Elem()
+				if !isPrimitiveTypeOrEmpty(t.String()) {
+					b.addToModelCache(t)
+				}
 			}
 		}
 	}

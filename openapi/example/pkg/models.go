@@ -12,5 +12,6 @@ type DeepModel struct {
 }
 
 type SliceModel struct {
-	SliceProp1 string `json:"slice_prop1"`
+	SliceProp1 string   `json:"slice_prop1"`
+	SliceProp2 []string `json:"slice_prop2,omitempty"`
 }

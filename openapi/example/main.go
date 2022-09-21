@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/ireward/wago/openapi"
+	models "github.com/ireward/wago/openapi/example/pkg"
 
 	"github.com/getkin/kin-openapi/openapi3"
 )
@@ -61,12 +62,8 @@ type TestRequest struct {
 	ReqProp2 string `json:"req_prop2,omitempty"`
 }
 
-type EmbeddedEmbeddedModel struct {
-	DeepProp1 string `json:"deep_prop1"`
-}
-
 type EmbeddedModel struct {
-	EmbeddedEmbeddedModel
+	models.DeepModel
 	EmbeddedProp1 int    `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
 	EmbeddedProp2 string `json:"embedded_prop2"`
 }

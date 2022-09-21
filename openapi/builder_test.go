@@ -62,8 +62,8 @@ func TestSchemaRefs(t *testing.T) {
 		enumCache:  make(map[string]bool),
 		modelCache: make(map[string]reflect.Type),
 	}
-	b.generator = openapi3gen.NewGenerator(openapi3gen.UseAllExportedFields(), openapi3gen.SchemaCustomizer(b.customizer))
 
+	b.generator = openapi3gen.NewGenerator(openapi3gen.UseAllExportedFields(), openapi3gen.SchemaCustomizer(b.customizer))
 	t.Run("test-enum-ref", func(t *testing.T) {
 		ref, err := b.buildSchema(reflect.TypeOf(TestResponse{}))
 		assert.NoError(t, err)
@@ -71,15 +71,6 @@ func TestSchemaRefs(t *testing.T) {
 
 		b.resolveRefPaths()
 		assert.Equal(t, fmt.Sprintf("%s/%s", schemasPath, "TestEnum"), ref.Value.Properties["test_enum"].Ref)
-	})
-
-	t.Run("test-embedded-model", func(t *testing.T) {
-		ref, err := b.buildSchema(reflect.TypeOf(TestResponse{}))
-		assert.NoError(t, err)
-		assert.NotNil(t, ref)
-
-		b.resolveRefPaths()
-		assert.Equal(t, fmt.Sprintf("%s/%s", schemasPath, "EmbeddedModel"), ref.Value.Properties["resp_prop3"].Ref)
 	})
 
 }
@@ -134,10 +125,10 @@ type EmbeddedModel struct {
 }
 
 type TestResponse struct {
-	RespProp1 string        `json:"resp_prop1"`
-	RespProp2 float64       `json:"resp_prop2"`
-	RespProp3 EmbeddedModel `json:"resp_prop3"`
-	TestEnum  TestEnum      `json:"test_enum"`
+	EmbeddedModel
+	RespProp1 string   `json:"resp_prop1"`
+	RespProp2 float64  `json:"resp_prop2"`
+	TestEnum  TestEnum `json:"test_enum"`
 }
 
 type TestAPI struct{}

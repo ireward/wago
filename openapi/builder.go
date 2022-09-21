@@ -468,8 +468,12 @@ func (b *builder) addToModelCache(model reflect.Type) {
 		b.modelCache[model.Name()] = model
 		for i := 0; i < model.NumField(); i++ {
 			field := model.Field(i)
-			if field.Anonymous || field.Type.Kind() == reflect.Struct {
+			if field.Anonymous || field.Type.Kind() == reflect.Struct || field.Type.Kind() == reflect.Ptr {
 				b.addToModelCache(field.Type)
+			}
+
+			if field.Type.Kind() == reflect.Slice {
+				b.addToModelCache(field.Type.Elem())
 			}
 		}
 	}

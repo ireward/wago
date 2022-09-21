@@ -4,8 +4,20 @@
   "schemas": {
    "EmbeddedModel": {
     "properties": {
+     "deep2_prop1": {
+      "type": "string"
+     },
+     "deep2_prop2": {
+      "type": "string"
+     },
      "deep_prop1": {
       "type": "string"
+     },
+     "deep_slice": {
+      "items": {
+       "$ref": "#/components/schemas/SliceModel"
+      },
+      "type": "array"
      },
      "embedded_prop1": {
       "description": "this is a description of embedded property 1. This is a very important property.",
@@ -16,10 +28,20 @@
      }
     },
     "required": [
+     "deep2_prop1",
      "deep_prop1",
+     "deep_slice",
      "embedded_prop1",
      "embedded_prop2"
     ],
+    "type": "object"
+   },
+   "SliceModel": {
+    "properties": {
+     "slice_prop1": {
+      "type": "string"
+     }
+    },
     "type": "object"
    },
    "TestEnum": {

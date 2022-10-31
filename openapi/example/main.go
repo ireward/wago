@@ -64,8 +64,9 @@ type TestRequest struct {
 
 type EmbeddedModel struct {
 	models.DeepModel
-	EmbeddedProp1 int    `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
-	EmbeddedProp2 string `json:"embedded_prop2"`
+	EmbeddedProp1 int        `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
+	EmbeddedProp2 string     `json:"embedded_prop2"`
+	TestEnumSlice []TestEnum `json:"test_enum_slice"`
 }
 
 type TestResponse struct {
@@ -75,7 +76,8 @@ type TestResponse struct {
 	TestEnum  TestEnum      `json:"test_enum"`
 }
 
-type TestAPI struct{}
+type TestAPI struct {
+}
 
 // End Region  ///////////////////////////////////////////////////////
 
@@ -179,7 +181,7 @@ func main() {
 		log.Fatal(err)
 		os.Exit(1)
 	}
-	if err := os.WriteFile("./openapi/example/generated_example.json", bytes, 0644); err != nil {
+	if err := os.WriteFile("./generated_example.json", bytes, 0644); err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}

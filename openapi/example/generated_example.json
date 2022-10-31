@@ -1,258 +1,246 @@
 {
- "openapi": "3.0.3",
- "components": {
-  "schemas": {
-   "EmbeddedModel": {
-    "properties": {
-     "deep2_prop1": {
-      "type": "string"
-     },
-     "deep2_prop2": {
-      "type": "string"
-     },
-     "deep_prop1": {
-      "type": "string"
-     },
-     "deep_slice": {
-      "items": {
-       "$ref": "#/components/schemas/SliceModel"
+  "openapi": "3.0.3",
+  "components": {
+    "schemas": {
+      "EmbeddedModel": {
+        "properties": {
+          "deep2_prop1": {
+            "type": "string"
+          },
+          "deep2_prop2": {
+            "type": "string"
+          },
+          "deep_prop1": {
+            "type": "string"
+          },
+          "deep_slice": {
+            "items": {
+              "$ref": "#/components/schemas/SliceModel"
+            },
+            "type": "array"
+          },
+          "embedded_prop1": {
+            "description": "this is a description of embedded property 1. This is a very important property.",
+            "type": "integer"
+          },
+          "embedded_prop2": {
+            "type": "string"
+          },
+          "test_enum_slice": {
+            "items": {
+              "enum": ["ValueOne", "ValueTwo", "ValueThree"],
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "deep2_prop1",
+          "deep_prop1",
+          "deep_slice",
+          "embedded_prop1",
+          "embedded_prop2",
+          "test_enum_slice"
+        ],
+        "type": "object"
       },
-      "type": "array"
-     },
-     "embedded_prop1": {
-      "description": "this is a description of embedded property 1. This is a very important property.",
-      "type": "integer"
-     },
-     "embedded_prop2": {
-      "type": "string"
-     }
-    },
-    "required": [
-     "deep2_prop1",
-     "deep_prop1",
-     "deep_slice",
-     "embedded_prop1",
-     "embedded_prop2"
-    ],
-    "type": "object"
-   },
-   "SliceModel": {
-    "properties": {
-     "slice_prop1": {
-      "type": "string"
-     },
-     "slice_prop2": {
-      "items": {
-       "format": "int32",
-       "type": "integer"
+      "SliceModel": {
+        "properties": {
+          "slice_prop1": {
+            "type": "string"
+          },
+          "slice_prop2": {
+            "items": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "slice_prop3": {
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": ["slice_prop1"],
+        "type": "object"
       },
-      "type": "array"
-     },
-     "slice_prop3": {
-      "format": "double",
-      "type": "number"
-     }
-    },
-    "required": [
-     "slice_prop1"
-    ],
-    "type": "object"
-   },
-   "TestEnum": {
-    "enum": [
-     "ValueOne",
-     "ValueTwo",
-     "ValueThree"
-    ],
-    "type": "string"
-   },
-   "TestRequest": {
-    "properties": {
-     "req_prop1": {
-      "description": "ReqProp1 must be set since the backend useses it to infer some important business logic.",
-      "type": "string"
-     },
-     "req_prop2": {
-      "type": "string"
-     }
-    },
-    "required": [
-     "req_prop1"
-    ],
-    "type": "object"
-   },
-   "TestResponse": {
-    "properties": {
-     "resp_prop1": {
-      "type": "string"
-     },
-     "resp_prop2": {
-      "format": "double",
-      "type": "number"
-     },
-     "resp_prop3": {
-      "$ref": "#/components/schemas/EmbeddedModel"
-     },
-     "test_enum": {
-      "$ref": "#/components/schemas/TestEnum"
-     }
-    },
-    "required": [
-     "resp_prop1",
-     "resp_prop2",
-     "resp_prop3",
-     "test_enum"
-    ],
-    "type": "object"
-   }
-  },
-  "parameters": {
-   "AppIDParam": {
-    "description": "The application ID used to assign a request to.",
-    "in": "header",
-    "name": "X-App-ID",
-    "required": true,
-    "schema": {
-     "type": "string"
-    }
-   },
-   "TestID": {
-    "description": "ID of the object to get.",
-    "in": "path",
-    "name": "id",
-    "required": true,
-    "schema": {
-     "type": "string"
-    }
-   }
-  },
-  "requestBodies": {
-   "TestRequest": {
-    "content": {
-     "application/json": {
-      "schema": {
-       "$ref": "#/components/schemas/TestRequest"
+      "TestEnum": {
+        "enum": ["ValueOne", "ValueTwo", "ValueThree"],
+        "type": "string"
+      },
+      "TestRequest": {
+        "properties": {
+          "req_prop1": {
+            "description": "ReqProp1 must be set since the backend useses it to infer some important business logic.",
+            "type": "string"
+          },
+          "req_prop2": {
+            "type": "string"
+          }
+        },
+        "required": ["req_prop1"],
+        "type": "object"
+      },
+      "TestResponse": {
+        "properties": {
+          "resp_prop1": {
+            "type": "string"
+          },
+          "resp_prop2": {
+            "format": "double",
+            "type": "number"
+          },
+          "resp_prop3": {
+            "$ref": "#/components/schemas/EmbeddedModel"
+          },
+          "test_enum": {
+            "$ref": "#/components/schemas/TestEnum"
+          }
+        },
+        "required": ["resp_prop1", "resp_prop2", "resp_prop3", "test_enum"],
+        "type": "object"
       }
-     }
     },
-    "required": true
-   }
-  },
-  "responses": {
-   "TestGetByIdResponse": {
-    "content": {
-     "application/json": {
-      "schema": {
-       "$ref": "#/components/schemas/TestResponse"
+    "parameters": {
+      "AppIDParam": {
+        "description": "The application ID used to assign a request to.",
+        "in": "header",
+        "name": "X-App-ID",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "TestID": {
+        "description": "ID of the object to get.",
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       }
-     }
     },
-    "description": "Returns the object with the given ID."
-   },
-   "TestPostResponse": {
-    "description": "Returns the object after POSTing it to the server."
-   },
-   "default": {
-    "description": ""
-   }
-  },
-  "securitySchemes": {
-   "BearerAuth": {
-    "bearerFormat": "JWT",
-    "scheme": "bearer",
-    "type": "http"
-   }
-  }
- },
- "info": {
-  "contact": {
-   "email": "john@doe.com"
-  },
-  "description": "This is a test API.\n",
-  "title": "Test API",
-  "version": "1.0.0"
- },
- "paths": {
-  "/api/v1/test": {
-   "post": {
-    "description": "This is a test operation.",
-    "operationId": "TestPost",
-    "parameters": [
-     {
-      "$ref": "#/components/parameters/AppIDParam"
-     }
-    ],
-    "requestBody": {
-     "content": {
-      "application/json": {
-       "schema": {
-        "$ref": "#/components/schemas/TestRequest"
-       }
+    "requestBodies": {
+      "TestRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TestRequest"
+            }
+          }
+        },
+        "required": true
       }
-     },
-     "required": true
     },
     "responses": {
-     "200": {
-      "$ref": "#/components/responses/TestPostResponse"
-     }
+      "TestGetByIdResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TestResponse"
+            }
+          }
+        },
+        "description": "Returns the object with the given ID."
+      },
+      "TestPostResponse": {
+        "description": "Returns the object after POSTing it to the server."
+      },
+      "default": {
+        "description": ""
+      }
     },
-    "security": [
-     {
-      "BearerAuth": []
-     }
-    ],
-    "summary": "TestPost",
-    "tags": [
-     "tag2"
-    ]
-   }
-  },
-  "/api/v1/test/{id}": {
-   "get": {
-    "description": "This is a test operation.",
-    "operationId": "TestGetById",
-    "parameters": [
-     {
-      "$ref": "#/components/parameters/AppIDParam"
-     },
-     {
-      "$ref": "#/components/parameters/TestID"
-     }
-    ],
-    "responses": {
-     "200": {
-      "$ref": "#/components/responses/TestGetByIdResponse"
-     }
-    },
-    "security": [
-     {
-      "BearerAuth": []
-     }
-    ],
-    "summary": "TestGetById",
-    "tags": [
-     "tag2"
-    ]
-   }
-  }
- },
- "servers": [
-  {
-   "description": "Test server",
-   "url": "{schema}://{address}",
-   "variables": {
-    "address": {
-     "default": "acme.com"
-    },
-    "schema": {
-     "default": "https",
-     "enum": [
-      "http",
-      "https"
-     ]
+    "securitySchemes": {
+      "BearerAuth": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
     }
-   }
-  }
- ]
+  },
+  "info": {
+    "contact": {
+      "email": "john@doe.com"
+    },
+    "description": "This is a test API.\n",
+    "title": "Test API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/test": {
+      "post": {
+        "description": "This is a test operation.",
+        "operationId": "TestPost",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppIDParam"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TestPostResponse"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "TestPost",
+        "tags": ["tag2"]
+      }
+    },
+    "/api/v1/test/{id}": {
+      "get": {
+        "description": "This is a test operation.",
+        "operationId": "TestGetById",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppIDParam"
+          },
+          {
+            "$ref": "#/components/parameters/TestID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TestGetByIdResponse"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "TestGetById",
+        "tags": ["tag2"]
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Test server",
+      "url": "{schema}://{address}",
+      "variables": {
+        "address": {
+          "default": "acme.com"
+        },
+        "schema": {
+          "default": "https",
+          "enum": ["http", "https"]
+        }
+      }
+    }
+  ]
 }

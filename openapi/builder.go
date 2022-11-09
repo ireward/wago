@@ -232,7 +232,10 @@ func (b *builder) extractRequiredProps(t reflect.Type) []string {
 			if isRequiredProp(f.Tag.Get("json")) {
 				split := strings.Split(f.Tag.Get("json"), ",")
 				if len(split) > 0 {
-					requiredProps = append(requiredProps, split[0])
+					// omit all that are removed during marshalling
+					if split[0] != "-" {
+						requiredProps = append(requiredProps, split[0])
+					}
 				}
 			}
 		}
@@ -532,8 +535,8 @@ func isPrimitiveTypeOrEmpty(t string) bool {
 		t == "int" ||
 		t == "number" ||
 		t == "int32" ||
-		t == "int64"
-
+		t == "int64" ||
+		t == "Time"
 }
 
 func formatSchemaRefPath(ref *openapi3.SchemaRef, name string) string {

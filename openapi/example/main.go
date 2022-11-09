@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/ireward/wago/openapi"
 	models "github.com/ireward/wago/openapi/example/pkg"
@@ -57,6 +58,11 @@ func (e TestEnum) OpenApiValues() []interface{} {
 	}
 }
 
+type TestModelOptional struct {
+	Prop1 string `json:"prop1,omitempty"`
+	Prop2 string `json:"prop2,omitempty"`
+}
+
 type TestRequest struct {
 	ReqProp1 string `json:"req_prop1" descr:"ReqProp1 must be set since the backend useses it to infer some important business logic."`
 	ReqProp2 string `json:"req_prop2,omitempty"`
@@ -64,9 +70,11 @@ type TestRequest struct {
 
 type EmbeddedModel struct {
 	models.DeepModel
-	EmbeddedProp1 int        `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
-	EmbeddedProp2 string     `json:"embedded_prop2"`
-	TestEnumSlice []TestEnum `json:"test_enum_slice"`
+	EmbeddedProp1 int                `json:"embedded_prop1" descr:"this is a description of embedded property 1. This is a very important property."`
+	EmbeddedProp2 string             `json:"embedded_prop2"`
+	TestEnumSlice []TestEnum         `json:"test_enum_slice"`
+	OptionalModel *TestModelOptional `json:"optional_model,omitempty"`
+	TimeValue     time.Time          `json:"time_value"`
 }
 
 type TestResponse struct {
@@ -131,7 +139,7 @@ func (t *TestAPI) GetPaths() []*openapi.Path {
 			Operations: []*openapi.Operation{
 				openapi.NewOperation(
 					// method of the operation
-					http.MethodGet,
+					http.MethodPost,
 					// handler of the operation (currently just a dummy to indicate to the implementer, which handler is used)
 					nil,
 					// tags where the operation is grouped in
@@ -139,7 +147,7 @@ func (t *TestAPI) GetPaths() []*openapi.Path {
 					// operationID
 					"TestGetById",
 					// requestBody
-					nil,
+					openapi.NewArrayRequestBody(TestRequest{}),
 					// required parameters: either in path, cookie or header
 					[]*openapi.Parameter{xAppIDParam, openapi.NewInPathParam("TestID", "id", "ID of the object to get.")},
 					// security requirements: eiter basic_auth, api_key or bearer
